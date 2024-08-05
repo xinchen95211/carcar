@@ -25,26 +25,31 @@ export default {
         other:0,
       },
       tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+
+      }],
+      hide:true,
     }
   },
   methods: {
-    onSubmit() {
+    onlaod() {
+      this.hide = false
+      this.tableData = []
+      let l = Number(this.money.periods) * 12;
+      console.log(l)
+      for (let i = 1; i <= l; i++) {
+        //bj
+        let bj = Number(this.principal) * (i)
+        //利息
+        let lx = Number(this.interest) * (i)
+        //违约金
+        let wyj = (Number(this.money.loan) - Number(bj)) * Number(this.money.damages) / 100
+
+        this.tableData.push({
+          data:i,
+          money: wyj,
+          totalmoney: Number(this.tableTotalmoney) + Number(lx) + Number(wyj)
+        })
+      }
 
     }
   },
@@ -52,6 +57,13 @@ export default {
    rate(){
      return ((this.money.supply * this.money.periods*12) - this.money.loan) / this.money.loan / this.money.periods * 100
    },
+    tableTotalmoney(){
+      return Number(this.money.downPyments)
+          + Number(this.money.loan)
+          + Number(this.money.insure)
+          + Number(this.money.licensePlate)
+          + Number(this.money.other)
+    },
   Landing(){
      //实际落地金额=首付+贷款+利息+保险+上牌+其他费用+提前还款违约金
     return Number(this.money.downPyments)
@@ -82,6 +94,11 @@ export default {
     interest(){
      return this.money.supply - this.principal
     },
+  },
+  watch:{
+    Landing(){
+      this.onlaod()
+    }
   }
 }
 </script>
@@ -127,15 +144,16 @@ export default {
         </el-form-item>
         <br>实际落地金额=首付+贷款+利息+保险+上牌+其他费用+提前还款违约金<br>
         <el-form-item>
-          <el-button type="primary">实际落地价：{{Landing}}</el-button>
+          <el-button type="primary" >实际落地价：{{Landing}}</el-button>
         </el-form-item>
       </el-form>
+      以下为提前还款的价格表
+      <el-table :data="tableData" style="width: 100%" border stripe >
+        <el-table-column prop="data" label="期数" width="100" />
+        <el-table-column prop="money" label="违约金" width="200" />
+        <el-table-column prop="totalmoney" label="落地价" width="200"/>
+      </el-table>
 
-<!--      <el-table :data="tableData" style="width: 100%" border>-->
-<!--        <el-table-column prop="date" label="Date" width="50" />-->
-<!--        <el-table-column prop="name" label="Name" width="180" />-->
-<!--        <el-table-column prop="address" label="Address" />-->
-<!--      </el-table>-->
 
 
 </template>
