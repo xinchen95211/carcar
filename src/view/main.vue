@@ -51,7 +51,7 @@ export default {
           data:i,
           bj:bj + lx,
           money: wyj,
-          totalmoney: Number(this.tableTotalmoney) + Number(lx) + Number(wyj)
+          totalmoney: (Number(this.tableTotalmoney) + Number(lx) + Number(wyj)).toFixed(2)
         })
       }
 
@@ -142,7 +142,7 @@ export default {
           <el-input v-model="money.other"  clearable type="number"/>
         </el-form-item>
         <el-form-item label="X年后提前还款:">
-          <el-input v-model="money.repayment"  clearable type="number"/>
+          <el-input v-model="money.repayment" :max="money.periods" clearable type="number"/>
         </el-form-item>
         <el-form-item label="提前还款违约金（%）:">
           <el-input v-model="money.damages"  clearable type="number"/>
