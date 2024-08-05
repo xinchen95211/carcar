@@ -49,7 +49,7 @@ export default {
 
         this.tableData.push({
           data:i,
-          bj:bj +'+'+ lx + '=' + (bj+lx),
+          bj:bj + lx,
           money: wyj,
           totalmoney: Number(this.tableTotalmoney) + Number(lx) + Number(wyj)
         })
